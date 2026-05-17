@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Minus, Plus, ShoppingBag, Star, Sparkles } from 'lucide-react';
@@ -10,7 +10,7 @@ import ProductQuickView from '../components/product/ProductQuickView';
 export default function ProductDetail() {
   const { id } = useParams();
   const product = getProductById(id);
-  const { addToCart } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const navigate = useNavigate();
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
