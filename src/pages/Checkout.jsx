@@ -223,27 +223,7 @@ export default function Checkout() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-extrabold text-[#0A0F2C]">Kontak</h2>
-                  <div className="flex gap-4">
-                    {/* Dev Tool: Auto-fill Dummy Data */}
-                    <button 
-                      type="button" 
-                      onClick={() => setForm({
-                        email: 'budi.tester@example.com',
-                        firstName: 'Budi',
-                        lastName: 'Santoso',
-                        address: 'Jl. Sudirman No. 123',
-                        addressExtra: 'Tower A, Lantai 10',
-                        city: 'Jakarta Selatan',
-                        province: 'DKI Jakarta',
-                        postalCode: '12190',
-                        phone: '081234567890'
-                      })}
-                      className="text-xs font-bold text-orange-500 hover:underline bg-orange-50 px-2 py-1 rounded"
-                    >
-                      🧪 Isi Data (Testing)
-                    </button>
-                    <button type="button" className="text-xs font-bold text-[#2563EB] hover:underline">Masuk</button>
-                  </div>
+                  <button type="button" className="text-xs font-bold text-[#2563EB] hover:underline">Masuk</button>
                 </div>
                 <input
                   name="email"
