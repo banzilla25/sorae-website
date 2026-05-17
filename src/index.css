@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Manrope', sans-serif;
+
+  --color-sorae-bg:        #F4F7FB;
+  --color-sorae-card:      #FFFFFF;
+  --color-sorae-textMain:  #1A1D27;
+  --color-sorae-textMuted: #6B7280;
+  --color-sorae-accent:    #2563EB;
+  --color-sorae-navy:      #0A0F2C;
+  --color-sorae-blue:      #E0F2FE;
+  --color-sorae-gold:      #FEF08A;
+  --color-sorae-pink:      #FCE7F3;
+  --color-sorae-red:       #FECDD3;
+
+  --shadow-soft:  0 10px 40px -10px rgba(37, 99, 235, 0.08);
+  --shadow-float: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+  --shadow-card:  0 2px 20px -4px rgba(10, 15, 44, 0.08);
+}
+
+/* ─── Scrollbar ─── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Marquee Animation (Announcement Bar) ─── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+  display: flex;
+  white-space: nowrap;
+}
+
+/* ─── Base ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(180deg, #EBF3FA 0%, #F8FAFC 40%, #FFFFFF 100%);
+  font-family: 'Manrope', sans-serif;
+  color: #1A1D27;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Page offset for fixed navbar+announcement ─── */
+.page-top {
+  padding-top: calc(var(--navbar-height, 64px) + 36px);
+}
+
+/* ─── Product card image hover ─── */
+.product-card-img {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.product-card:hover .product-card-img {
+  transform: scale(1.05);
+}
+
+/* ─── Custom range input ─── */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: #E5E7EB;
+  outline: none;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0A0F2C;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(10, 15, 44, 0.25);
+  transition: transform 0.15s ease;
+}
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0A0F2C;
+  cursor: pointer;
+  border: 2px solid white;
+}
+
+/* ─── Checkbox accent ─── */
+input[type='checkbox'] {
+  accent-color: #0A0F2C;
+  cursor: pointer;
+}
+input[type='radio'] {
+  accent-color: #0A0F2C;
+  cursor: pointer;
+}
+
+/* ─── Line clamp utility ─── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ─── Smooth image loading ─── */
+img {
+  image-rendering: auto;
+  transition: opacity 0.2s ease;
+}
+
+/* ─── Focus ring ─── */
+:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 2px;
+}
+
+/* ─── Backdrop blur fallback ─── */
+@supports not (backdrop-filter: blur(1px)) {
+  .backdrop-blur-sm { background-color: rgba(255,255,255,0.9); }
+  .backdrop-blur-md { background-color: rgba(255,255,255,0.95); }
+}
+
+/* ─── Selection color ─── */
+::selection {
+  background: #BFDBFE;
+  color: #1E3A8A;
+}

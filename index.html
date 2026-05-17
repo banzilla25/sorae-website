@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SORAE | Temukan Wangi Khasmu</title>
+
+    <!-- SEO Meta -->
+    <meta name="description" content="4 Kepribadian. 4 Cerita. 50ml EDP cuma Rp 50.000. Parfum SORAE – Temukan wangi yang pas sama ceritamu hari ini." />
+    <meta name="keywords" content="parfum, parfum murah, EDP, parfum lokal, SORAE, wewangian, Golden Hour, Cherry Bloom, Breeze Mist, Baby Buddy" />
+    <meta name="author" content="SORAE Perfume" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://soraeperfume.com/" />
+    <meta property="og:title" content="SORAE | Temukan Wangi Khasmu" />
+    <meta property="og:description" content="4 Kepribadian. 4 Cerita. 50ml EDP cuma Rp 50.000. Tanpa basa-basi — cuma parfum premium yang paling pas buatmu." />
+    <meta property="og:image" content="/sorae_hero_main.jpg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SORAE | Temukan Wangi Khasmu" />
+    <meta name="twitter:description" content="4 Kepribadian. 4 Cerita. 50ml EDP cuma Rp 50.000. Temukan wangimu." />
+    <meta name="twitter:image" content="/sorae_hero_main.jpg" />
+
+    <!-- ============================================ -->
+    <!-- META PIXEL BASE CODE -->
+    <!-- GANTI 'YOUR_PIXEL_ID_HERE' DENGAN PIXEL ID ANDA -->
+    <!-- ============================================ -->
+    <!-- META PIXEL BASE CODE -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '941760328740821');
+      fbq('track', 'PageView');
+    </script>
+    <!-- END META PIXEL -->
+
+    <!-- TIKTOK PIXEL BASE CODE -->
+    <script>
+      !function (w, d, t) {
+        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+        var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+        ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+        ttq.load('D7UQUU3C77U07JNLKRUG');
+        ttq.page();
+      }(window, document, 'ttq');
+    </script>
+    <!-- END TIKTOK PIXEL -->
+
+    <!-- GLOBAL TRACKING HELPER (META + TIKTOK) -->
+    <script>
+      // Deduplication storage
+      window._lastTracked = {};
+
+      window.trackEvent = function(name, params = {}) {
+        const now = Date.now();
+        const eventKey = `${name}_${JSON.stringify(params)}`;
+        
+        // Prevent duplicate events within 1.5 seconds
+        if (window._lastTracked[eventKey] && (now - window._lastTracked[eventKey] < 1500)) {
+          return;
+        }
+        window._lastTracked[eventKey] = now;
+
+        // Common Parameters
+        const contentName = params.content_name || '';
+        const contentId = params.content_id || contentName.toLowerCase().replace(/\s+/g, '_');
+        const value = params.value || 0;
+        const currency = params.currency || 'IDR';
+
+        // 1. Meta Pixel (FB)
+        if (typeof fbq !== 'undefined') {
+          let metaParams = { ...params };
+          
+          // Fix warnings: Add content_ids and content_type for catalog ads
+          if (contentName || contentId) {
+            metaParams.content_ids = [contentId];
+            metaParams.content_type = 'product';
+          }
+          
+          fbq('track', name, metaParams);
+          console.log(`[Meta Pixel] Tracked: ${name}`, metaParams);
+        }
+
+        // 2. TikTok Pixel
+        if (typeof ttq !== 'undefined') {
+          if (name === 'PageView') {
+            ttq.page();
+            console.log(`[TikTok Pixel] Tracked: PageView`);
+            return; 
+          }
+
+          let tiktokEvent = name;
+          if (name === 'Lead') tiktokEvent = 'CompleteRegistration';
+
+          let tiktokParams = { ...params };
+          if (contentName || contentId) {
+            tiktokParams.contents = [{
+              content_id: contentId,
+              content_name: contentName,
+              content_type: 'product',
+              quantity: 1,
+              price: value
+            }];
+            tiktokParams.content_type = 'product';
+          }
+
+          ttq.track(tiktokEvent, tiktokParams);
+          console.log(`[TikTok Pixel] Tracked: ${tiktokEvent}`, tiktokParams);
+        }
+      };
+
+      window.trackCustomEvent = function(name, params = {}) {
+        if (typeof fbq !== 'undefined') fbq('trackCustom', name, params);
+        if (typeof ttq !== 'undefined') ttq.track(name, params);
+        console.log(`[Multi-Pixel] Tracked Custom: ${name}`, params);
+      };
+    </script>
+    <!-- END META PIXEL -->
+
+    <!-- Midtrans Snap Sandbox Script -->
+    <script type="text/javascript"
+      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      data-client-key="%VITE_MIDTRANS_CLIENT_KEY%"></script>
+  </head>
+  <body>
+    <!-- META PIXEL NOSCRIPT -->
+    <noscript>
+      <img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=941760328740821&ev=PageView&noscript=1"/>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
