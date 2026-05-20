@@ -4,10 +4,10 @@ export const products = [
     name: 'Breeze Mist',
     subtitle: 'Eau de Parfum',
     price: 90000,
-    originalPrice: null,
+    originalPrice: 129000,
     sizes: ['30ml', '50ml'],
     image: '/assets/breeze-mist.jpg',
-    images: ['/assets/breeze-mist.jpg'],
+    images: ['/assets/breeze-mist.jpg', '/assets/golden-hour.jpg', '/assets/baby-buddy.jpg', '/assets/cherry-bloom.jpg'],
     inStock: true,
     badge: null,
     category: 'Fresh',
@@ -29,10 +29,10 @@ export const products = [
     name: 'Golden Hour',
     subtitle: 'Eau de Parfum',
     price: 90000,
-    originalPrice: null,
+    originalPrice: 129000,
     sizes: ['30ml', '50ml'],
     image: '/assets/golden-hour.jpg',
-    images: ['/assets/golden-hour.jpg'],
+    images: ['/assets/golden-hour.jpg', '/assets/breeze-mist.jpg', '/assets/baby-buddy.jpg'],
     inStock: true,
     badge: 'Best Seller',
     category: 'Oriental',
@@ -54,10 +54,10 @@ export const products = [
     name: 'Baby Buddy',
     subtitle: 'Eau de Parfum',
     price: 90000,
-    originalPrice: null,
+    originalPrice: 129000,
     sizes: ['30ml', '50ml'],
     image: '/assets/baby-buddy.jpg',
-    images: ['/assets/baby-buddy.jpg'],
+    images: ['/assets/baby-buddy.jpg', '/assets/cherry-bloom.jpg'],
     inStock: true,
     badge: null,
     category: 'Floral',
@@ -79,10 +79,10 @@ export const products = [
     name: 'Cherry Bloom',
     subtitle: 'Eau de Parfum',
     price: 90000,
-    originalPrice: null,
+    originalPrice: 129000,
     sizes: ['30ml', '50ml'],
     image: '/assets/cherry-bloom.jpg',
-    images: ['/assets/cherry-bloom.jpg'],
+    images: ['/assets/cherry-bloom.jpg', '/assets/breeze-mist.jpg', '/assets/golden-hour.jpg'],
     inStock: true,
     badge: 'New Arrival',
     category: 'Gourmand',
@@ -100,6 +100,11 @@ export const products = [
     }
   }
 ];
+
+export const ORIGINAL_PRICE_SIZES = {
+  '30ml': 99000,
+  '50ml': 129000,
+};
 
 export const PRICE_SIZES = {
   '30ml': 70000,

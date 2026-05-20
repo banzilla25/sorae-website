@@ -3,17 +3,20 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Minus, Plus, ChevronRight, ExternalLink } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { PRICE_SIZES } from '../../data/products';
+import { PRICE_SIZES, ORIGINAL_PRICE_SIZES } from '../../data/products';
 
 export default function ProductQuickView({ product, onClose }) {
   const { addToCart, setIsCartOpen } = useCart();
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[1] || '50ml');
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   if (!product) return null;
 
   const price = PRICE_SIZES?.[selectedSize] ?? product.price;
+  const originalPrice = ORIGINAL_PRICE_SIZES?.[selectedSize] ?? product.originalPrice;
+  const images = product.images?.length > 0 ? product.images.slice(0, 6) : [product.image];
 
   const handleAdd = () => {
     addToCart(product, selectedSize, quantity);
@@ -52,9 +55,33 @@ export default function ProductQuickView({ product, onClose }) {
 
             {/* Content - Scrollable */}
             <div className="flex-1 overflow-y-auto">
-              {/* Product Image */}
-              <div className="relative aspect-[4/3] bg-gray-50 overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              {/* Product Image Slider */}
+              <div className="relative aspect-[4/3] bg-gray-50 overflow-hidden group">
+                <img src={images[currentSlide]} alt={product.name} className="w-full h-full object-cover transition-opacity duration-300" />
+                
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => setCurrentSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight size={16} className="rotate-180" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                    
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      {images.map((_, idx) => (
+                        <div key={idx} className={`w-1.5 h-1.5 rounded-full ${currentSlide === idx ? 'bg-[#0A0F2C]' : 'bg-white/70 shadow-sm'}`} />
+                      ))}
+                    </div>
+                  </>
+                )}
+
                 {product.badge && (
                   <span className={`absolute top-4 left-4 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full ${
                     product.badge === 'Best Seller' ? 'bg-[#0A0F2C] text-white' : 'bg-[#2563EB] text-white'
@@ -135,11 +162,23 @@ export default function ProductQuickView({ product, onClose }) {
                 </div>
 
                 {/* Price */}
-                <div className="flex items-center justify-between py-4 border-t border-gray-100">
+                <div className="flex items-center justify-between py-4 border-t border-gray-100 mt-4">
                   <span className="text-sm font-bold text-gray-500">Total</span>
-                  <span className="text-2xl font-extrabold text-[#0A0F2C]">
-                    Rp {(price * quantity).toLocaleString('id-ID')}
-                  </span>
+                  <div className="flex flex-col items-end">
+                    {originalPrice && originalPrice > price && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm text-gray-400 line-through font-medium">
+                          Rp {(originalPrice * quantity).toLocaleString('id-ID')}
+                        </span>
+                        <span className="bg-red-50 text-red-600 px-1.5 py-0.5 text-[10px] rounded-md font-extrabold">
+                          {Math.round(((originalPrice - price) / originalPrice) * 100)}% OFF
+                        </span>
+                      </div>
+                    )}
+                    <span className={`text-2xl font-extrabold ${originalPrice && originalPrice > price ? 'text-red-600' : 'text-[#0A0F2C]'}`}>
+                      Rp {(price * quantity).toLocaleString('id-ID')}
+                    </span>
+                  </div>
                 </div>
 
                 {/* View Full Details */}

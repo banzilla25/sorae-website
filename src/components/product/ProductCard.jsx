@@ -97,17 +97,24 @@ export default function ProductCard({ product, onQuickView, index = 0 }) {
           <h3 className="font-extrabold text-[#0A0F2C] text-base leading-snug mb-1">{product.name}</h3>
           <p className="text-xs text-gray-400 font-medium mb-3">{product.subtitle}</p>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col">
               {product.originalPrice && (
-                <span className="text-sm text-gray-400 line-through font-medium">
-                  Rp {product.originalPrice.toLocaleString('id-ID')}
-                </span>
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-xs text-gray-400 line-through font-medium">
+                    Rp {product.originalPrice.toLocaleString('id-ID')}
+                  </span>
+                  {product.originalPrice > product.price && (
+                    <span className="bg-red-50 text-red-600 px-1.5 py-0.5 text-[10px] rounded-md font-extrabold">
+                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    </span>
+                  )}
+                </div>
               )}
               <span className={`font-extrabold text-base ${product.originalPrice ? 'text-red-600' : 'text-[#0A0F2C]'}`}>
                 Rp {product.price.toLocaleString('id-ID')}
               </span>
             </div>
-            <span className="text-[11px] text-gray-400 font-medium">{product.sizes?.join(' / ')}</span>
+            <span className="text-[11px] text-gray-400 font-medium self-end pb-1">{product.sizes?.join(' / ')}</span>
           </div>
         </div>
       </Link>

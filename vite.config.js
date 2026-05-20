@@ -50,4 +50,7 @@ const midtransPlugin = () => ({
 
 export default defineConfig({
   plugins: [react(), midtransPlugin()],
+  build: {
+    chunkSizeWarningLimit: 1000,
+  }
 });

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Minus, Plus, ShoppingBag, Star, Sparkles } from 'lucide-react';
-import { getProductById, products, PRICE_SIZES } from '../data/products';
+import { getProductById, products, PRICE_SIZES, ORIGINAL_PRICE_SIZES } from '../data/products';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/product/ProductCard';
 import ProductQuickView from '../components/product/ProductQuickView';
@@ -19,6 +19,8 @@ export default function ProductDetail() {
   const [added, setAdded] = useState(false);
   const [expandNotes, setExpandNotes] = useState(false);
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [product]);
@@ -34,6 +36,9 @@ export default function ProductDetail() {
   }
 
   const price = PRICE_SIZES?.[selectedSize] ?? product.price;
+  const originalPrice = ORIGINAL_PRICE_SIZES?.[selectedSize] ?? product.originalPrice;
+  const images = product.images?.length > 0 ? product.images.slice(0, 6) : [product.image];
+
   const related = products.filter(p => p.id !== product.id).slice(0, 4);
 
   const handleAddToCart = () => {
@@ -82,17 +87,35 @@ export default function ProductDetail() {
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
-            {/* Left: Image */}
+            {/* Left: Image Slider */}
             <motion.div
               initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
               className="sticky top-28"
             >
-              <div className="relative rounded-3xl overflow-hidden aspect-square bg-gray-50 border border-gray-100">
+              <div className="relative rounded-3xl overflow-hidden aspect-square bg-gray-50 border border-gray-100 mb-4 group">
                 <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  src={images[currentSlide]}
+                  alt={`${product.name} - ${currentSlide + 1}`}
+                  className="w-full h-full object-cover transition-opacity duration-300"
                 />
+                
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => setCurrentSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight size={20} className="rotate-180" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
+
                 {product.badge && (
                   <span className={`absolute top-5 left-5 text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full ${
                     product.badge === 'Best Seller' ? 'bg-[#0A0F2C] text-white' : 'bg-[#2563EB] text-white'
@@ -101,6 +124,23 @@ export default function ProductDetail() {
                   </span>
                 )}
               </div>
+              
+              {/* Thumbnail List */}
+              {images.length > 1 && (
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                  {images.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${
+                        currentSlide === idx ? 'border-[#0A0F2C] opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={img} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
 
             {/* Right: Info */}
@@ -116,13 +156,18 @@ export default function ProductDetail() {
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-3">
-                {product.originalPrice && (
-                  <span className="text-xl text-gray-400 line-through font-medium">
-                    Rp {product.originalPrice.toLocaleString('id-ID')}
-                  </span>
+              <div className="flex flex-col gap-1">
+                {originalPrice && originalPrice > price && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl text-gray-400 line-through font-medium">
+                      Rp {originalPrice.toLocaleString('id-ID')}
+                    </span>
+                    <span className="bg-red-50 text-red-600 px-2 py-1 text-xs rounded-md font-extrabold">
+                      {Math.round(((originalPrice - price) / originalPrice) * 100)}% OFF
+                    </span>
+                  </div>
                 )}
-                <span className={`text-3xl font-extrabold ${product.originalPrice ? 'text-red-600' : 'text-[#0A0F2C]'}`}>
+                <span className={`text-3xl font-extrabold ${originalPrice && originalPrice > price ? 'text-red-600' : 'text-[#0A0F2C]'}`}>
                   Rp {price.toLocaleString('id-ID')}
                 </span>
               </div>

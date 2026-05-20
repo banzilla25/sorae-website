@@ -20,8 +20,33 @@ export default function Checkout() {
   const [selectedShipping, setSelectedShipping] = useState(SHIPPING_METHODS[0].id);
   const [submitted, setSubmitted] = useState(false);
 
+  const [couponCode, setCouponCode] = useState('');
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [couponApplied, setCouponApplied] = useState(false);
+
   const shippingCost = SHIPPING_METHODS.find(m => m.id === selectedShipping)?.price ?? 0;
-  const total = cartTotal + shippingCost;
+  const total = Math.max(0, cartTotal - discountAmount) + shippingCost;
+
+  const applyCoupon = (e) => {
+    e.preventDefault();
+    if (couponCode.toUpperCase() === 'SORAE20') {
+      setDiscountAmount(cartTotal * 0.2); // 20% discount
+      setCouponApplied(true);
+    } else if (couponCode.toUpperCase() === 'POTONG50') {
+      setDiscountAmount(50000); // 50k flat discount
+      setCouponApplied(true);
+    } else {
+      alert('Kode promo tidak valid atau sudah kadaluarsa!');
+      setDiscountAmount(0);
+      setCouponApplied(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponCode('');
+    setDiscountAmount(0);
+    setCouponApplied(false);
+  };
 
   // Track InitiateCheckout when page loads
   useEffect(() => {
@@ -64,6 +89,16 @@ export default function Checkout() {
       quantity: item.quantity,
       name: `${item.product.name} (${item.size})`
     }));
+
+    // Add discount as an item if any
+    if (discountAmount > 0) {
+      item_details.push({
+        id: 'DISCOUNT',
+        price: -discountAmount,
+        quantity: 1,
+        name: `Diskon Promo (${couponCode})`
+      });
+    }
 
     // Add shipping cost as an item
     if (shippingCost > 0) {
@@ -117,6 +152,8 @@ export default function Checkout() {
         customer: form,
         items: items,
         total: total,
+        discount: discountAmount,
+        couponCode: couponApplied ? couponCode : null,
         shippingMethod: selectedShipping,
         status: 'pending' // Will change to paid later if successful
       };
@@ -464,6 +501,42 @@ export default function Checkout() {
                   <span>Subtotal</span>
                   <span className="font-bold text-[#0A0F2C]">Rp {cartTotal.toLocaleString('id-ID')}</span>
                 </div>
+                
+                {/* Coupon Section */}
+                <div className="py-2">
+                  {!couponApplied ? (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Kode Promo"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-[#0A0F2C] uppercase"
+                      />
+                      <button
+                        type="button"
+                        onClick={applyCoupon}
+                        disabled={!couponCode}
+                        className="bg-[#0A0F2C] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-black disabled:opacity-50 transition"
+                      >
+                        Terapkan
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between bg-green-50 text-green-700 px-3 py-2 rounded-xl text-sm font-bold border border-green-200">
+                      <span>✓ {couponCode.toUpperCase()} Berhasil</span>
+                      <button onClick={removeCoupon} type="button" className="text-green-700 hover:text-green-900 text-xs">Hapus</button>
+                    </div>
+                  )}
+                </div>
+
+                {couponApplied && (
+                  <div className="flex justify-between text-sm font-medium text-green-600">
+                    <span>Diskon Promo</span>
+                    <span className="font-bold">- Rp {discountAmount.toLocaleString('id-ID')}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-sm font-medium text-gray-500">
                   <span>Pengiriman</span>
                   <span className="font-bold text-[#0A0F2C]">Rp {shippingCost.toLocaleString('id-ID')}</span>
